@@ -1,0 +1,71 @@
+{
+	"name": "df_transformar_efectivos",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_oltp_efectivos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_efectivo as integer,",
+				"          id_especialidad as integer,",
+				"          id_unidad_actual as integer,",
+				"          id_rango_actual as integer,",
+				"          nombre as string,",
+				"          ci as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          departamento_origen as string,",
+				"          fecha_ingreso as string,",
+				"          estado as string,",
+				"          salario_mensual as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          id_efectivo,",
+				"          id_especialidad,",
+				"          id_unidad_actual,",
+				"          id_rango_actual,",
+				"          nombre,",
+				"          ci,",
+				"          fecha_nacimiento,",
+				"          genero,",
+				"          departamento_origen,",
+				"          fecha_ingreso,",
+				"          estado,",
+				"          salario_mensual",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(nombre = trim(regexReplace(nombre, '\\\\s+', ' '))) ~> derivedColumn1",
+				"derivedColumn1 derive(genero = case(     instr(lower(genero), 'fem') > 0, 'Femenino',     instr(lower(genero), 'masc') > 0, 'Masculino',     'Desconocido' )) ~> derivedColumn2",
+				"derivedColumn2 derive(salario_mensual = toDecimal( regexReplace(salario_mensual, '[^0-9,.]', ''), 2, '.' )) ~> derivedColumn3"
+			]
+		}
+	}
+}
