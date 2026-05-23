@@ -1,0 +1,21 @@
+{
+	"name": "ds_sink_unidades",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "data.parquet",
+				"folderPath": "fuerzas_armadas/unidades/",
+				"container": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

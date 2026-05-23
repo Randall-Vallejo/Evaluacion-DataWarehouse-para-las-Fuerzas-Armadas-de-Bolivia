@@ -1,0 +1,21 @@
+{
+	"name": "ds_sink_tipo_operacion",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "data.parquet",
+				"folderPath": "fuerzas_armadas/tbl_tipos_operacion/",
+				"container": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

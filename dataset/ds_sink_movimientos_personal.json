@@ -1,0 +1,21 @@
+{
+	"name": "ds_sink_movimientos_personal",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "data.parquet",
+				"folderPath": "fuerzas_armadas/tbl_movimientos_personal/",
+				"container": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

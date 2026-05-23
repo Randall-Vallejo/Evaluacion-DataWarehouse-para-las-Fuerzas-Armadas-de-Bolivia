@@ -1,0 +1,21 @@
+{
+	"name": "ds_sink_estructura_orgazacional",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "data/parquet",
+				"folderPath": "fuerzas_armadas/tbl_estructura_orgazacional/",
+				"container": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
