@@ -1,0 +1,15 @@
+{
+	"name": "adf-fuerzas-armadas-sisger",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "chilecentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "daa47506-7e4f-40c5-be72-2cc7cfcae7c5",
+		"tenantId": "cc28633f-12b8-46cb-bc15-951dae239b4d"
+	}
+}
