@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "data.parquet",
-				"folderPath": "fuerzas_armadas/tbl_tipos_movimiento/",
+				"folderPath": "bronze/fuerzas_armadas/tbl_tipos_movimiento/",
 				"container": "datalake-fa"
 			},
 			"compressionCodec": "snappy"

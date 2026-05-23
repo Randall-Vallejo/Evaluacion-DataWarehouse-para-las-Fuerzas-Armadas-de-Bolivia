@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "data.parquet",
-				"folderPath": "fuerzas_armadas/tbl_zonas/",
+				"folderPath": "bronze/fuerzas_armadas/tbl_zonas/",
 				"container": "datalake-fa"
 			},
 			"compressionCodec": "snappy"
