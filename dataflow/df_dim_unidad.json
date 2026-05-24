@@ -1,12 +1,12 @@
 {
-	"name": "df_dim_rango",
+	"name": "df_dim_unidad",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sink_rangos_silver",
+						"referenceName": "ds_sink_unidades_silver",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_gold_dim_rango",
+						"referenceName": "ds_gold_dim_unidad",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -34,11 +34,13 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          id_rango as integer,",
+				"          id_unidad as integer,",
+				"          id_brigada as integer,",
 				"          nombre as string,",
-				"          categoria as string,",
-				"          nivel_jerarquico as integer,",
-				"          abreviatura as string",
+				"          codigo as string,",
+				"          ciudad as string,",
+				"          departamento as string,",
+				"          tipo_cuartel as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -46,15 +48,15 @@
 				"     format: 'parquet') ~> source1",
 				"source1 select(skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 derive(abreviatura = upper(abreviatura),",
-				"          nombre = upper(nombre),",
-				"          categoria = upper(categoria)) ~> derivedColumn1",
+				"select1 derive(nombre = upper(nombre)) ~> derivedColumn1",
 				"derivedColumn1 select(mapColumn(",
-				"          id_rango,",
+				"          id_unidad,",
+				"          id_brigada,",
 				"          nombre,",
-				"          categoria,",
-				"          nivel_jerarquico,",
-				"          abreviatura",
+				"          codigo,",
+				"          ciudad,",
+				"          departamento,",
+				"          tipo_cuartel",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",

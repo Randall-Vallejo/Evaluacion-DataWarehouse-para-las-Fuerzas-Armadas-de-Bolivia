@@ -1,0 +1,20 @@
+{
+	"name": "ds_gold_dim_rango",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "/fuerzas_armadas/dim_rango/",
+				"container": "gold"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
