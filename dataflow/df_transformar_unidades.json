@@ -1,12 +1,12 @@
 {
-	"name": "df_transformar_tipos_movimiento",
+	"name": "df_transformar_unidades",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_otlp_tipos_movimiento",
+						"referenceName": "ds_otlp_unidades",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sink_tipos_movimiento_silver",
+						"referenceName": "ds_sink_unidades_silver",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -37,28 +37,43 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          id_tipo as integer,",
+				"          id_unidad as integer,",
+				"          id_brigada as integer,",
 				"          nombre as string,",
-				"          descripcion as string",
+				"          codigo as string,",
+				"          ciudad as string,",
+				"          departamento as string,",
+				"          tipo_cuartel as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
 				"source1 select(mapColumn(",
-				"          id_tipo,",
+				"          id_unidad,",
+				"          id_brigada,",
 				"          nombre,",
-				"          descripcion",
+				"          codigo,",
+				"          ciudad,",
+				"          departamento,",
+				"          tipo_cuartel",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 derive(nombre = trim(nombre),",
-				"          descripcion = trim(descripcion)) ~> derivedColumn1",
-				"derivedColumn1 derive(nombre = initCap(nombre)) ~> derivedColumn2",
+				"          codigo = trim(codigo),",
+				"          ciudad = trim(ciudad),",
+				"          departamento = trim(departamento),",
+				"          tipo_cuartel = trim(tipo_cuartel)) ~> derivedColumn1",
+				"derivedColumn1 derive(tipo_cuartel = initCap(tipo_cuartel)) ~> derivedColumn2",
 				"derivedColumn2 select(mapColumn(",
-				"          id_tipo,",
+				"          id_unidad,",
+				"          id_brigada,",
 				"          nombre,",
-				"          descripcion",
+				"          codigo,",
+				"          ciudad,",
+				"          departamento,",
+				"          tipo_cuartel",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",

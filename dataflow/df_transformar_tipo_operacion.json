@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_otlp_tipos_operacion",
+						"referenceName": "ds_sink_tipo_operacion_silver",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -64,19 +64,9 @@
 				"derivedColumn1 derive(categoria = initCap(categoria)) ~> derivedColumn2",
 				"select2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          id_tipo as integer,",
-				"          nombre as string,",
-				"          categoria as string",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
+				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}

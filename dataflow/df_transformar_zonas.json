@@ -1,12 +1,12 @@
 {
-	"name": "df_transformar_tipos_movimiento",
+	"name": "df_transformar_zonas",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_otlp_tipos_movimiento",
+						"referenceName": "ds_otlp_zonas",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sink_tipos_movimiento_silver",
+						"referenceName": "ds_sink_zonas_silver",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -37,28 +37,47 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          id_tipo as integer,",
+				"          id_zona as integer,",
 				"          nombre as string,",
-				"          descripcion as string",
+				"          departamento as string,",
+				"          frontera_con as string,",
+				"          tipo_terreno as string,",
+				"          altitud_msnm as integer,",
+				"          nivel_riesgo as string,",
+				"          acceso_carretero as boolean",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
 				"source1 select(mapColumn(",
-				"          id_tipo,",
+				"          id_zona,",
 				"          nombre,",
-				"          descripcion",
+				"          departamento,",
+				"          frontera_con,",
+				"          tipo_terreno,",
+				"          altitud_msnm,",
+				"          nivel_riesgo,",
+				"          acceso_carretero",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 derive(nombre = trim(nombre),",
-				"          descripcion = trim(descripcion)) ~> derivedColumn1",
-				"derivedColumn1 derive(nombre = initCap(nombre)) ~> derivedColumn2",
+				"          departamento = trim(departamento),",
+				"          frontera_con = trim(frontera_con),",
+				"          tipo_terreno = trim(tipo_terreno),",
+				"          nivel_riesgo = trim(nivel_riesgo)) ~> derivedColumn1",
+				"derivedColumn1 derive(tipo_terreno = initCap(tipo_terreno),",
+				"          nivel_riesgo = initCap(nivel_riesgo)) ~> derivedColumn2",
 				"derivedColumn2 select(mapColumn(",
-				"          id_tipo,",
+				"          id_zona,",
 				"          nombre,",
-				"          descripcion",
+				"          departamento,",
+				"          frontera_con,",
+				"          tipo_terreno,",
+				"          altitud_msnm,",
+				"          nivel_riesgo,",
+				"          acceso_carretero",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
