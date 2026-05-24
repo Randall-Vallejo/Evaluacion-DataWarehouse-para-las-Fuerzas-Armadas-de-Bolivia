@@ -1,0 +1,21 @@
+{
+	"name": "ds_sink_especialidades_silver",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "data.parquet",
+				"folderPath": "silver/fuerzas_armadas/tbl_especialidades/",
+				"container": "datalake-fa"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
