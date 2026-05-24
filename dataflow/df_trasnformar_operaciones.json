@@ -1,0 +1,179 @@
+{
+	"name": "df_trasnformar_operaciones",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_otlp_operaciones",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_operaciones_silver",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "derivedColumn5"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_operacion as integer,",
+				"          id_tipo as integer,",
+				"          id_unidad_resp as integer,",
+				"          id_zona as integer,",
+				"          nombre_operacion as string,",
+				"          fecha_inicio as string,",
+				"          fecha_fin as string,",
+				"          efectivos_desplegados as string,",
+				"          vehiculos_utilizados as string,",
+				"          duracion_dias as string,",
+				"          costo_operacion as string,",
+				"          resultado as string,",
+				"          detenidos as string,",
+				"          area_km2 as string,",
+				"          incidentes as string,",
+				"          observaciones as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          id_operacion,",
+				"          id_tipo,",
+				"          id_unidad_resp,",
+				"          id_zona,",
+				"          nombre_operacion,",
+				"          fecha_inicio,",
+				"          fecha_fin,",
+				"          efectivos_desplegados,",
+				"          vehiculos_utilizados,",
+				"          duracion_dias,",
+				"          costo_operacion,",
+				"          resultado,",
+				"          detenidos,",
+				"          area_km2,",
+				"          incidentes,",
+				"          observaciones",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(nombre_operacion = trim(nombre_operacion),",
+				"          fecha_inicio = trim(fecha_inicio),",
+				"          fecha_fin = trim(fecha_fin),",
+				"          efectivos_desplegados = trim(efectivos_desplegados),",
+				"          vehiculos_utilizados = trim(vehiculos_utilizados),",
+				"          duracion_dias = trim(duracion_dias),",
+				"          costo_operacion = trim(costo_operacion),",
+				"          resultado = trim(resultado),",
+				"          detenidos = trim(detenidos),",
+				"          area_km2 = trim(area_km2),",
+				"          incidentes = trim(incidentes),",
+				"          observaciones = trim(observaciones)) ~> derivedColumn1",
+				"derivedColumn1 derive(fecha_inicio = iif(\r",
+				"    length(fecha_inicio) == 8,\r",
+				"    toDate(fecha_inicio,'yyyyMMdd'),\r",
+				"\r",
+				"    iif(\r",
+				"        substring(replace(fecha_inicio,'/','-'),5,1) == '-',\r",
+				"        toDate(replace(fecha_inicio,'/','-'),'yyyy-MM-dd'),\r",
+				"        toDate(replace(fecha_inicio,'/','-'),'dd-MM-yyyy')\r",
+				"    )\r",
+				"),",
+				"          fecha_fin = iif(\r",
+				"    length(fecha_fin) == 8,\r",
+				"    toDate(fecha_fin,'yyyyMMdd'),\r",
+				"\r",
+				"    iif(\r",
+				"        substring(replace(fecha_fin,'/','-'),5,1) == '-',\r",
+				"        toDate(replace(fecha_fin,'/','-'),'yyyy-MM-dd'),\r",
+				"        toDate(replace(fecha_fin,'/','-'),'dd-MM-yyyy')\r",
+				"    )\r",
+				")) ~> derivedColumn2",
+				"derivedColumn2 derive(efectivos_desplegados = toInteger(\r",
+				"    iif(lower(efectivos_desplegados) == 'cero','0',\r",
+				"    iif(lower(efectivos_desplegados) == 'uno','1',\r",
+				"    iif(lower(efectivos_desplegados) == 'dos','2',\r",
+				"    iif(lower(efectivos_desplegados) == 'tres','3',\r",
+				"    iif(lower(efectivos_desplegados) == 'cuatro','4',\r",
+				"    iif(lower(efectivos_desplegados) == 'cinco','5',\r",
+				"    iif(lower(efectivos_desplegados) == 'seis','6',\r",
+				"    iif(lower(efectivos_desplegados) == 'siete','7',\r",
+				"    iif(lower(efectivos_desplegados) == 'ocho','8',\r",
+				"    iif(lower(efectivos_desplegados) == 'nueve','9',\r",
+				"    iif(lower(efectivos_desplegados) == 'diez','10',\r",
+				"    iif(lower(efectivos_desplegados) == 'once','11',\r",
+				"    iif(lower(efectivos_desplegados) == 'doce','12',\r",
+				"    iif(lower(efectivos_desplegados) == 'quince','15',\r",
+				"    iif(lower(efectivos_desplegados) == 'diecisiete','17',\r",
+				"    iif(lower(efectivos_desplegados) == 'dieciocho','18',\r",
+				"    iif(lower(efectivos_desplegados) == 'veinte','20',\r",
+				"    iif(lower(efectivos_desplegados) == 'veintidos','22',\r",
+				"    iif(lower(efectivos_desplegados) == 'veinticuatro','24',\r",
+				"    regexReplace(lower(efectivos_desplegados),'[^0-9]','')\r",
+				")))))))))))))))))))),",
+				"          vehiculos_utilizados = toInteger(     iif(lower(vehiculos_utilizados) == 'cero','0',     iif(lower(vehiculos_utilizados) == 'uno','1',     iif(lower(vehiculos_utilizados) == 'dos','2',     iif(lower(vehiculos_utilizados) == 'tres','3',     iif(lower(vehiculos_utilizados) == 'cuatro','4',     iif(lower(vehiculos_utilizados) == 'cinco','5',     iif(lower(vehiculos_utilizados) == 'seis','6',     iif(lower(vehiculos_utilizados) == 'siete','7',     iif(lower(vehiculos_utilizados) == 'ocho','8',     iif(lower(vehiculos_utilizados) == 'nueve','9',     iif(lower(vehiculos_utilizados) == 'diez','10',     iif(lower(vehiculos_utilizados) == 'once','11',     iif(lower(vehiculos_utilizados) == 'doce','12',     iif(lower(vehiculos_utilizados) == 'quince','15',     iif(lower(vehiculos_utilizados) == 'diecisiete','17',     iif(lower(vehiculos_utilizados) == 'dieciocho','18',     iif(lower(vehiculos_utilizados) == 'veinte','20',     iif(lower(vehiculos_utilizados) == 'veintidos','22',     iif(lower(vehiculos_utilizados) == 'veinticuatro','24',     regexReplace(lower(vehiculos_utilizados),'[^0-9]','') )))))))))))))))))))),",
+				"          duracion_dias = toInteger(     iif(lower(duracion_dias) == 'cero','0',     iif(lower(duracion_dias) == 'uno','1',     iif(lower(duracion_dias) == 'dos','2',     iif(lower(duracion_dias) == 'tres','3',     iif(lower(duracion_dias) == 'cuatro','4',     iif(lower(duracion_dias) == 'cinco','5',     iif(lower(duracion_dias) == 'seis','6',     iif(lower(duracion_dias) == 'siete','7',     iif(lower(duracion_dias) == 'ocho','8',     iif(lower(duracion_dias) == 'nueve','9',     iif(lower(duracion_dias) == 'diez','10',     iif(lower(duracion_dias) == 'once','11',     iif(lower(duracion_dias) == 'doce','12',     iif(lower(duracion_dias) == 'quince','15',     iif(lower(duracion_dias) == 'diecisiete','17',     iif(lower(duracion_dias) == 'dieciocho','18',     iif(lower(duracion_dias) == 'veinte','20',     iif(lower(duracion_dias) == 'veintidos','22',     iif(lower(duracion_dias) == 'veinticuatro','24',     regexReplace(lower(duracion_dias),'[^0-9]','') )))))))))))))))))))),",
+				"          area_km2 = toInteger(     iif(lower(area_km2) == 'cero','0',     iif(lower(area_km2) == 'uno','1',     iif(lower(area_km2) == 'dos','2',     iif(lower(area_km2) == 'tres','3',     iif(lower(area_km2) == 'cuatro','4',     iif(lower(area_km2) == 'cinco','5',     iif(lower(area_km2) == 'seis','6',     iif(lower(area_km2) == 'siete','7',     iif(lower(area_km2) == 'ocho','8',     iif(lower(area_km2) == 'nueve','9',     iif(lower(area_km2) == 'diez','10',     iif(lower(area_km2) == 'once','11',     iif(lower(area_km2) == 'doce','12',     iif(lower(area_km2) == 'quince','15',     iif(lower(area_km2) == 'diecisiete','17',     iif(lower(area_km2) == 'dieciocho','18',     iif(lower(area_km2) == 'veinte','20',     iif(lower(area_km2) == 'veintidos','22',     iif(lower(area_km2) == 'veinticuatro','24',     regexReplace(lower(area_km2),'[^0-9]','') )))))))))))))))))))),",
+				"          incidentes = toInteger(     iif(lower(incidentes) == 'cero','0',     iif(lower(incidentes) == 'uno','1',     iif(lower(incidentes) == 'dos','2',     iif(lower(incidentes) == 'tres','3',     iif(lower(incidentes) == 'cuatro','4',     iif(lower(incidentes) == 'cinco','5',     iif(lower(incidentes) == 'seis','6',     iif(lower(incidentes) == 'siete','7',     iif(lower(incidentes) == 'ocho','8',     iif(lower(incidentes) == 'nueve','9',     iif(lower(incidentes) == 'diez','10',     iif(lower(incidentes) == 'once','11',     iif(lower(incidentes) == 'doce','12',     iif(lower(incidentes) == 'quince','15',     iif(lower(incidentes) == 'diecisiete','17',     iif(lower(incidentes) == 'dieciocho','18',     iif(lower(incidentes) == 'veinte','20',     iif(lower(incidentes) == 'veintidos','22',     iif(lower(incidentes) == 'veinticuatro','24',     regexReplace(lower(incidentes),'[^0-9]','') )))))))))))))))))))),",
+				"          detenidos = toInteger(     iif(lower(detenidos) == 'cero','0',     iif(lower(detenidos) == 'uno','1',     iif(lower(detenidos) == 'dos','2',     iif(lower(detenidos) == 'tres','3',     iif(lower(detenidos) == 'cuatro','4',     iif(lower(detenidos) == 'cinco','5',     iif(lower(detenidos) == 'seis','6',     iif(lower(detenidos) == 'siete','7',     iif(lower(detenidos) == 'ocho','8',     iif(lower(detenidos) == 'nueve','9',     iif(lower(detenidos) == 'diez','10',     iif(lower(detenidos) == 'once','11',     iif(lower(detenidos) == 'doce','12',     iif(lower(detenidos) == 'quince','15',     iif(lower(detenidos) == 'diecisiete','17',     iif(lower(detenidos) == 'dieciocho','18',     iif(lower(detenidos) == 'veinte','20',     iif(lower(detenidos) == 'veintidos','22',     iif(lower(detenidos) == 'veinticuatro','24',     regexReplace(lower(detenidos),'[^0-9]','') ))))))))))))))))))))) ~> derivedColumn3",
+				"derivedColumn3 derive(costo_operacion = substring(     regexReplace(costo_operacion,'[^0-9]',''),     0,     4 )) ~> derivedColumn4",
+				"derivedColumn4 derive(costo_operacion = toInteger(     substring(         regexReplace(costo_operacion,'[^0-9]',''),         0,         4     ) )) ~> derivedColumn5",
+				"derivedColumn5 select(mapColumn(",
+				"          id_operacion,",
+				"          id_tipo,",
+				"          id_unidad_resp,",
+				"          id_zona,",
+				"          nombre_operacion,",
+				"          fecha_inicio,",
+				"          fecha_fin,",
+				"          efectivos_desplegados,",
+				"          vehiculos_utilizados,",
+				"          duracion_dias,",
+				"          costo_operacion,",
+				"          resultado,",
+				"          detenidos,",
+				"          area_km2,",
+				"          incidentes,",
+				"          observaciones",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

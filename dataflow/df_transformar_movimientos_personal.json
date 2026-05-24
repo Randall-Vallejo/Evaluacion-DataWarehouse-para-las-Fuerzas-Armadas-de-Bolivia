@@ -1,0 +1,126 @@
+{
+	"name": "df_transformar_movimientos_personal",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_otlp_movimientos_personal",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_movimientos_personal_silver",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "derivedColumn5"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_movimiento as integer,",
+				"          id_efectivo as integer,",
+				"          id_unidad_destino as integer,",
+				"          id_rango as integer,",
+				"          id_tipo as integer,",
+				"          fecha_movimiento as string,",
+				"          antiguedad_anios as string,",
+				"          salario_mensual as string,",
+				"          observaciones as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          id_movimiento,",
+				"          id_efectivo,",
+				"          id_unidad_destino,",
+				"          id_rango,",
+				"          id_tipo,",
+				"          fecha_movimiento,",
+				"          antiguedad_anios,",
+				"          salario_mensual,",
+				"          observaciones",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(fecha_movimiento = trim(fecha_movimiento),",
+				"          antiguedad_anios = trim(antiguedad_anios),",
+				"          salario_mensual = trim(salario_mensual),",
+				"          observaciones = trim(observaciones)) ~> derivedColumn1",
+				"derivedColumn1 derive(fecha_movimiento = iif(     length(fecha_movimiento) == 8,     toDate(fecha_movimiento,'yyyyMMdd'),      iif(         substring(replace(fecha_movimiento,'/','-'),5,1) == '-',         toDate(replace(fecha_movimiento,'/','-'),'yyyy-MM-dd'),         toDate(replace(fecha_movimiento,'/','-'),'dd-MM-yyyy')     ) )) ~> derivedColumn2",
+				"derivedColumn2 derive(antiguedad_anios = toInteger(\r",
+				"    iif(lower(antiguedad_anios) == 'cero','0',\r",
+				"    iif(lower(antiguedad_anios) == 'uno','1',\r",
+				"    iif(lower(antiguedad_anios) == 'dos','2',\r",
+				"    iif(lower(antiguedad_anios) == 'tres','3',\r",
+				"    iif(lower(antiguedad_anios) == 'cuatro','4',\r",
+				"    iif(lower(antiguedad_anios) == 'cinco','5',\r",
+				"    iif(lower(antiguedad_anios) == 'seis','6',\r",
+				"    iif(lower(antiguedad_anios) == 'siete','7',\r",
+				"    iif(lower(antiguedad_anios) == 'ocho','8',\r",
+				"    iif(lower(antiguedad_anios) == 'nueve','9',\r",
+				"    iif(lower(antiguedad_anios) == 'diez','10',\r",
+				"    iif(lower(antiguedad_anios) == 'once','11',\r",
+				"    iif(lower(antiguedad_anios) == 'doce','12',\r",
+				"    iif(lower(antiguedad_anios) == 'quince','15',\r",
+				"    iif(lower(antiguedad_anios) == 'diecisiete','17',\r",
+				"    iif(lower(antiguedad_anios) == 'dieciocho','18',\r",
+				"    iif(lower(antiguedad_anios) == 'veinte','20',\r",
+				"    iif(lower(antiguedad_anios) == 'veintidos','22',\r",
+				"    iif(lower(antiguedad_anios) == 'veinticuatro','24',\r",
+				"    regexReplace(lower(antiguedad_anios),'[^0-9]','')\r",
+				"))))))))))))))))))))) ~> derivedColumn3",
+				"derivedColumn3 derive(salario_mensual = substring(     regexReplace(salario_mensual,'[^0-9]',''),     0,     4 )) ~> derivedColumn4",
+				"derivedColumn4 derive(salario_mensual = toInteger(     substring(         regexReplace(salario_mensual,'[^0-9]',''),         0,         4     ) )) ~> derivedColumn5",
+				"derivedColumn5 select(mapColumn(",
+				"          id_movimiento,",
+				"          id_efectivo,",
+				"          id_unidad_destino,",
+				"          id_rango,",
+				"          id_tipo,",
+				"          fecha_movimiento,",
+				"          antiguedad_anios,",
+				"          salario_mensual,",
+				"          observaciones",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
