@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "data.parquet",
 				"folderPath": "bronze/fuerzas_armadas/tbl_movimientos_personal/",
 				"container": "datalake-fa"
 			},
