@@ -1,5 +1,5 @@
 {
-	"name": "ds_sink_zonas_silver",
+	"name": "ds_gold_dim_zona_operacion",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_blob_storage",
@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "silver/fuerzas_armadas/tbl_zonas/",
-				"container": "datalake-fa"
+				"folderPath": "/fuerzas_armadas/dim_zona_operacion/",
+				"container": "gold"
 			},
 			"compressionCodec": "snappy"
 		},
