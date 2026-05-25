@@ -1,5 +1,5 @@
 {
-	"name": "ds_dim_tiempo",
+	"name": "df_dim_tiempo",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
