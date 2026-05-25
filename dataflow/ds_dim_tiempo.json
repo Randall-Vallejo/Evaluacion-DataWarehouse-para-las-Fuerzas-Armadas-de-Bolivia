@@ -1,0 +1,86 @@
+{
+	"name": "ds_dim_tiempo",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_operaciones_silver",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_gold_dim_tiempo",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_operacion as integer,",
+				"          id_tipo as integer,",
+				"          id_unidad_resp as integer,",
+				"          id_zona as integer,",
+				"          nombre_operacion as string,",
+				"          fecha_inicio as date,",
+				"          fecha_fin as date,",
+				"          efectivos_desplegados as integer,",
+				"          vehiculos_utilizados as integer,",
+				"          duracion_dias as integer,",
+				"          costo_operacion as integer,",
+				"          resultado as string,",
+				"          detenidos as integer,",
+				"          area_km2 as integer,",
+				"          incidentes as integer,",
+				"          observaciones as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
+				"source1 derive(fecha = fecha_inicio,",
+				"          anio = year(fecha_inicio),",
+				"          mes = month(fecha_inicio),",
+				"          dia = dayOfMonth(fecha_inicio),",
+				"          trimestre = iif(month(fecha_inicio) <= 3, 1,\r",
+				"iif(month(fecha_inicio) <= 6, 2,\r",
+				"iif(month(fecha_inicio) <= 9, 3, 4)))) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          fecha,",
+				"          anio,",
+				"          mes,",
+				"          dia,",
+				"          trimestre",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 filter(!isNull(fecha)",
+				"&& !isNull(anio)",
+				"&& !isNull(mes)",
+				"&& !isNull(dia)) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
