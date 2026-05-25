@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "/fuerzas_armadas/dim_rango/",
-				"container": "gold"
+				"folderPath": "gold/fuerzas_armadas/dim_rango/",
+				"container": "datalake-fa"
 			},
 			"compressionCodec": "snappy"
 		},

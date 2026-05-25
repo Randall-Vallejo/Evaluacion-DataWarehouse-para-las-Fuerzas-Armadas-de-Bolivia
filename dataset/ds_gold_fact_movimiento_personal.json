@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "/fuerzas_armadas/fact_movimiento_personal/",
-				"container": "gold"
+				"folderPath": "gold/fuerzas_armadas/fact_movimiento_personal/",
+				"container": "datalake-fa"
 			},
 			"compressionCodec": "snappy"
 		},

@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "/fuerzas_armadas/dim_efectivos/",
-				"container": "gold"
+				"folderPath": "gold/fuerzas_armadas/dim_efectivos/",
+				"container": "datalake-fa"
 			},
 			"compressionCodec": "snappy"
 		},
